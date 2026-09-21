@@ -1,4 +1,4 @@
-# Love Forever — Interactive Animated Heart
+Interactive Animated Heart
 
 A lightweight, zero-dependency, pure front-end romantic web experience. It features 100 floating love phrases moving along mathematical parametric curves to trace out an animated heart, an automatic 13-color theme cycle every 3 seconds, and a centerpiece typewriter animation.
 
