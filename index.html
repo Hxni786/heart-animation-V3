@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Love Forever</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --heart-color: #ea80b0;
+    }
+
+    /* --- Base page --- */
+    body {
+      background: #000;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    /* --- Love words --- */
+    #ui .love {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -225px 0 0 -225px;
+      /* per-item delay via CSS variable --i (1..N) */
+      --i: 1;
+    }
+
+    #ui .love_word {
+      color: var(--heart-color);
+      font-size: 1.4rem;
+      transform: translateY(-100%) rotateZ(-30deg);
+      text-shadow: none;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      transition: color 1s ease;
+    }
+
+    #ui .love_horizontal {
+      animation: horizontal 10000ms infinite alternate ease-in-out;
+      animation-delay: calc(var(--i) * -300ms);
+    }
+
+    #ui .love_vertical {
+      animation: vertical 20000ms infinite linear;
+      animation-delay: calc(var(--i) * -300ms);
+    }
+
+    /* --- Animations --- */
+    @keyframes horizontal {
+      from { transform: translateX(0px); }
+      to   { transform: translateX(450px); }
+    }
+
+    @keyframes vertical {
+      0%   { transform: translateY(180px); }
+      10%  { transform: translateY(45px); }
+      15%  { transform: translateY(4.5px); }
+      18%  { transform: translateY(0px); }
+      20%  { transform: translateY(4.5px); }
+      22%  { transform: translateY(34.61538px); }
+      24%  { transform: translateY(64.28571px); }
+      25%  { transform: translateY(112.5px); }
+      26%  { transform: translateY(64.28571px); }
+      28%  { transform: translateY(34.61538px); }
+      30%  { transform: translateY(4.5px); }
+      32%  { transform: translateY(0px); }
+      35%  { transform: translateY(4.5px); }
+      40%  { transform: translateY(45px); }
+      50%  { transform: translateY(180px); }
+      71%  { transform: translateY(428.57143px); }
+      72.5%{ transform: translateY(441.17647px); }
+      75%  { transform: translateY(450px); }
+      77.5%{ transform: translateY(441.17647px); }
+      79%  { transform: translateY(428.57143px); }
+      100% { transform: translateY(180px); }
+    }
+
+    #center-name {
+      position: absolute;
+      top: calc(50% - 55px);
+      left: calc(50% + 130px);
+      transform: translate(-50%, -50%);
+      color: var(--heart-color);
+      font-size: 3.2rem;
+      font-weight: 700;
+      letter-spacing: 5px;
+      text-shadow: none;
+      white-space: nowrap;
+      z-index: 100;
+      pointer-events: none;
+      transition: color 1s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #cursor {
+      display: inline-block;
+      color: var(--heart-color);
+      font-weight: 300;
+      margin-left: 2px;
+      animation: blink 0.8s infinite;
+      transition: color 1s ease;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="center-name"><span id="typewriter"></span><span id="cursor">|</span></div>
+  <div id="ui"></div>
+
+  <script>
+    // Create N floating “I love you” items
+    const N = 100;
+    const ui = document.getElementById('ui');
+
+    for (let i = 1; i <= N; i++) {
+      const love = document.createElement('div');
+      love.className = 'love';
+      love.style.setProperty('--i', i);
+
+      const h = document.createElement('div');
+      h.className = 'love_horizontal';
+
+      const v = document.createElement('div');
+      v.className = 'love_vertical';
+
+      const word = document.createElement('div');
+      word.className = 'love_word';
+      word.textContent = 'I love you';
+
+      v.appendChild(word);
+      h.appendChild(v);
+      love.appendChild(h);
+      ui.appendChild(love);
+    }
+
+    // Colors that cycle automatically every 3 seconds (clean text color change, no heavy glow)
+    const colors = [
+      '#ea80b0', // Original Pink
+      '#ff3366', // Deep Red
+      '#b388ff', // Violet / Purple
+      '#00d2ff', // Sky Blue
+      '#ffd700', // Gold
+      '#ff6b81', // Coral
+      '#2ed573', // Fresh Green
+      '#ffffff', // Pure White
+      '#ff007f', // Hot Magenta
+      '#ff9f43', // Warm Amber / Tangerine
+      '#00f5d4', // Bright Turquoise
+      '#f368e0', // Soft Lilac Pink
+      '#54a0ff'  // Royal Blue
+    ];
+
+    let colorIndex = 0;
+    setInterval(() => {
+      colorIndex = (colorIndex + 1) % colors.length;
+      document.documentElement.style.setProperty('--heart-color', colors[colorIndex]);
+    }, 3000);
+
+    // Typewriter animation for "Lishy"
+    const targetName = "Lishy";
+    const typewriterEl = document.getElementById('typewriter');
+    let charIdx = 0;
+    let isDeleting = false;
+
+    function typeLoop() {
+      if (!isDeleting) {
+        charIdx++;
+        typewriterEl.textContent = targetName.slice(0, charIdx);
+        if (charIdx === targetName.length) {
+          isDeleting = true;
+          setTimeout(typeLoop, 2600); // pause on full name
+          return;
+        }
+        setTimeout(typeLoop, 220); // typing speed
+      } else {
+        charIdx--;
+        typewriterEl.textContent = targetName.slice(0, charIdx);
+        if (charIdx === 0) {
+          isDeleting = false;
+          setTimeout(typeLoop, 600); // pause before re-typing
+          return;
+        }
+        setTimeout(typeLoop, 120); // erasing speed
+      }
+    }
+
+    typeLoop();
+  </script>
+</body>
+</html>
